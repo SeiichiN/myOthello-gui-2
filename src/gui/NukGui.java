@@ -383,12 +383,12 @@ public class NukGui implements MouseListener, ActionListener {
 		for (int i = 0; i < 8; i++) {
 			// 各方向について敵石の数をカウントする。
 			int enemyPoint = gameHelper.countEnemy(i, neighbors[i], player, 0);
-			System.out.println("方向:" + i + "num:" + neighbors[i].getNum() + " 敵数:" + enemyPoint );
+			// System.out.println("方向:" + i + "num:" + neighbors[i].getNum() + " 敵数:" + enemyPoint );
 			if (enemyPoint > 0) {
 				// System.out.println("敵石の方向:" + i + "数:" + enemyPoint );
 				// その次のマス (index と 色) を取得
 				MasuData nextMasu = neighbors[i]; // board.neighbor(i, neighbors[i]);
-				System.out.println("そのマス:" + nextMasu.getNum() + " 色:" + nextMasu.getColor());
+				// System.out.println("そのマス:" + nextMasu.getNum() + " 色:" + nextMasu.getColor());
 				// その次のマスの色がプレーヤーの色と同じでない間は実行
 				while (!nextMasu.getColor().equals(player)) {
 					int index = nextMasu.getNum();
@@ -406,7 +406,7 @@ public class NukGui implements MouseListener, ActionListener {
 					// index = index + direction[i].getDir();
 					// その次のマス (index と 色) を取得
 					nextMasu = board.neighbor(i, neighbors[i]);
-					System.out.println("その次のマス:" + nextMasu.getNum() + " 色:" + nextMasu.getColor());
+					// System.out.println("その次のマス:" + nextMasu.getNum() + " 色:" + nextMasu.getColor());
 				}
 			}
 		}
