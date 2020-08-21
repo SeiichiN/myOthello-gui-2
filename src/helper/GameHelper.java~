@@ -1,0 +1,115 @@
+// GameHelper.java
+
+package helper;
+
+import java.awt.Color;
+
+import model.*;
+
+public class GameHelper {
+    private int row = 6;
+    private int col = 6;
+    private int board_masu_num = 36;
+    private MasuData[] masuData;
+    private int enemyPoint = 0;
+
+    public GameHelper( MasuData[] masuData ) {
+        this.masuData = masuData;
+    }
+    public GameHelper( int row, int col, MasuData[] masuData ) {
+        this.row = row;
+        this.col = col;
+        this.board_masu_num = row * col;
+        this.masuData = masuData;
+    }
+
+    // index位置の x座標 -- 0...6
+    public int getX ( int index ) {
+        return index % col;
+    }
+
+    // index位置の y座標
+    public int getY ( int index ) {
+        return (int)Math.floor( index / col ) ;
+    }
+
+    /**
+     * 八方向それぞれの通し番号位置を調べる。
+     */
+    public Direction[] setDirection ( Direction[] direction ) {
+        for (int i = 0; i < 8; i++) {
+            direction[i] = new Direction();
+        }
+        direction[0].setDir( - col - 1 );
+        direction[1].setDir( - col );
+        direction[2].setDir( - col + 1 );
+        direction[3].setDir( - 1 );
+        direction[4].setDir( + 1 );
+        direction[5].setDir( + col - 1 );
+        direction[6].setDir( + col );
+        direction[7].setDir( + col + 1 );
+        return direction;
+    }
+    
+    /**
+     * そのマスにコマを置けるかどうかを調べる
+     * @param:
+     *   int serialNum -- 現在のポイント
+     *   Color color -- 現在のプレーヤー
+     */
+    public int canMove ( int serialNum, Color player ) {
+        int point = 0;
+        Board board = new Board ( MasuData );
+        MasuData[] masuData = board.neighbors();
+        for (int i = 0; i < 8; i++) {
+            point = point + countEnemy( masuData[i], serialNum, player );
+            // System.out.println("now point:" + point);
+        }
+        return point;
+    }
+
+    /**
+     * countEnemy -- その方向に敵コマがどれだけいるかを調べる。
+     * @param:
+     *   Direction direction -- 方向とポイントを保持する構造体がわりのクラス
+     *   int index -- プレーヤーが石を置きたい場所
+     *   Color player -- 現在のプレーヤー
+     */
+    public int countEnemy ( Direction direction, int index, Color player ) {
+        // 調べたい方向の通し番号を調べる
+        int dirPoint = index + direction.getDir();
+        // System.out.println("現在地点:x" + getX(index) + "y" + getY(index) +
+        //                    " 調査方向:x" + getX(dirPoint) + "y" + getY(dirPoint));
+        // 盤の外側をチェック
+        if (dirPoint < 0 || dirPoint >= board_masu_num ) {
+            return 0;
+        }
+        if (getX(index) == 0 && getX(dirPoint) == (col - 1)) return 0;
+        if (getX(index) == (col - 1) && getX(dirPoint) == 0) return 0;
+        if (getY(index) == 0 && getY(dirPoint) < 0) return 0;
+        if (getY(index) == (row - 1) && getY(dirPoint) > (row - 1) ) return 0;
+        
+        // 敵プレーヤー
+        Color enemy = (player.equals( Color.BLACK )) ? Color.WHITE : Color.BLACK;
+
+        // もしその方向の隣が敵石だったら、ポイントを1プラスして、
+        // さらにその方向に調査をすすめる。
+        if ( masuData[ dirPoint ].getColor().equals( enemy ) ) {
+            // System.out.println("敵石見っけ!");
+            direction.addPoint( 1 );
+            // System.out.println("次の方向:" + direction.getDir() + " 次の地点:" + dirPoint );
+            return countEnemy( direction, dirPoint, player ) ;
+        }
+        
+        // もしその方向の隣が味方の石だったら、現在のポイントを返す。
+        // 敵石が無くてすぐに味方の石だったら、現在のポイントは 0 である。
+        if ( masuData[ dirPoint ].getColor().equals( player )) {
+            // System.out.println("味方の石! point:" + direction.getPoint() );
+            return direction.getPoint();
+        }
+
+        // その方向に石が無い、つまり緑であれば、ゼロである。
+        // 仮に敵石が続いてのち緑であれば、ポイントはゼロになる。
+        return 0;
+    }
+}
