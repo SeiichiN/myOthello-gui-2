@@ -28,8 +28,8 @@ import model.MasuData;
 public class NukGui implements MouseListener, ActionListener {
 	private int board_row_size = 260;
 	private int board_col_size = 260;
-	private int masu_row = 6;
-	private int masu_col = 6;
+	private int masu_row = 6;	// 盤面の大きさ・行・コンストラクタで変更可能
+	private int masu_col = 6;   // 盤面の大きさ・桁・コンストラクタで変更可能
 	private int board_masu_num = masu_row * masu_col;
 	private final int STONE_SIZE = 40;
 	private final int STONE_MARGIN = 3;
@@ -44,7 +44,7 @@ public class NukGui implements MouseListener, ActionListener {
 	// 他のコードと情報を共有するためのもの。
 	// private ArrayList<MasuData> masuData;
 
-	private Board board = new Board();
+	private Board board; 
 
 	// 盤面に表示するマスの配列。
 	// 情報として通し番号とそのマスの色を持つ。
@@ -61,6 +61,7 @@ public class NukGui implements MouseListener, ActionListener {
 	// ラベルと文字
 	JLabel msg_teban;
 	JLabel msg_alert;
+	JLabel msg_info;
 
 	/**
 	 * コンストラクター 引数なしの場合は、6x6の盤面である。
@@ -92,12 +93,12 @@ public class NukGui implements MouseListener, ActionListener {
 		this.serialNum = i;
 	}
 
-	// 通し番号位置の x座標 -- 0...6
+	// 通し番号位置の x座標 -- 1...6
 	public int getX(int index) {
-		return index % masu_col;
+		return index % masu_col + 1;
 	}
 
-	// 通し番号位置の y座標 -- 0...6
+	// 通し番号位置の y座標 -- 1...6
 	public int getY(int index) {
 		return (int) (index / masu_col + 1);
 	}
@@ -164,8 +165,10 @@ public class NukGui implements MouseListener, ActionListener {
 		// 文字を表示するラベルの作成
 		msg_teban = new JLabel();
 		msg_alert = new JLabel();
+		msg_info = new JLabel();
 		msg_teban.setPreferredSize(new Dimension(board_col_size, msg_row_size));
 		msg_alert.setPreferredSize(new Dimension(board_col_size, msg_row_size));
+		msg_info.setPreferredSize(new Dimension(board_col_size, msg_row_size));
 
 		// ボタンパネルの作成
 		JPanel buttonPanel = new JPanel();
@@ -185,6 +188,7 @@ public class NukGui implements MouseListener, ActionListener {
 
 		ctrlPanel.add(msg_teban);
 		ctrlPanel.add(msg_alert);
+		ctrlPanel.add(msg_info);
 		ctrlPanel.add(buttonPanel);
 
 		// フレームにパネルを貼り付ける。
@@ -206,18 +210,14 @@ public class NukGui implements MouseListener, ActionListener {
 	}
 
 	/**
-	 * masu[] のデータを masuData[] にバックアップする。
+	 * masu[] のデータを board にバックアップする。
 	 */
 	public void masuDataBackup() {
+		board = new Board( masu_row, masu_col );
 		for (int i = 0; i < board_masu_num; i++) {
-			// MasuData oneMasuData = new MasuData();
-			// oneMasuData.setNum( masu[i].getNum() );
-			// oneMasuData.setColor( masu[i].getColor() );
-			// board.get(i).set( oneMasuData );
-			board.get(i).setNum(masu[i].getNum());
-			board.get(i).setColor(masu[i].getColor());
+			board.get(i).setNum( masu[i].getNum() );
+			board.get(i).setColor( masu[i].getColor() );
 		}
-		// board.setBoard( masuData );
 	}
 
 	/**
@@ -262,40 +262,40 @@ public class NukGui implements MouseListener, ActionListener {
 	 *
 	 *          row と col で指定した位置を (0, 0)の位置をゼロとして、 i の連続数で表す。
 	 *
-	 *          1 2 3 4 5 6 +----------------------- 1 | 0 1 2 3 4 5 2 | 6 7 8 9 10
-	 *          11 3 | 12 13 14 15 16 17 4 | 18 19 20 21 22 23 5 | 24 25 26 27 28 29
-	 *          6 | 30 31 32 33 34 35
+	 *             1  2  3  4  5  6 
+	 *          +-----------------------
+	 *        1 |  0  1  2  3  4  5
+	 *        2 |  6  7  8  9 10 11
+	 *        3 | 12 13 14 15 16 17
+	 *        4 | 18 19 20 21 22 23
+	 *        5 | 24 25 26 27 28 29
+	 *        6 | 30 31 32 33 34 35
 	 */
 	public void setStone(int i, Color player) {
 		// for DEBUG
 		// System.out.println( "setStone: i:" + i );
 		// System.out.println( "setStone: player:" + player );
 
-		masu[i].removeAll();
+		masu[i].removeAll();    // ます空にする
 
-		ImageIcon icon;
-		if (player == Color.WHITE) {
-			icon = whiteIcon;
-		} else {
-			icon = blackIcon;
-		}
+		ImageIcon icon = (player == Color.WHITE) ? whiteIcon : blackIcon;
+
 		masu[i].setLayout(new GridLayout(1, 1));
 		masu[i].setIcon(icon);
 		masu[i].setColor(player);
-		// masuData にも新しいデータを送る。
-		// board[i].setColor( player );
 		// board -- ボードじょうほうにもデータを送る。
 		board.get(i).setColor(player);
 		// this.serialNum を更新する
 		setSerialNum(i);
 		// System.out.println("i:" + i);
+		// 現在地 i を player色にすることで、相手の石を裏返す
 		flipOver(i, player);
 	}
 
 	/**
 	 * 1次元配列 masu の内容一覧 現在のところ未使用
 	 */
-	public void showMasu() {
+	public void showAllMasu() {
 		for (int i = 0; i < board_masu_num; i++) {
 			System.out.println("masu[" + i + "]:" + masu[i].getGraphics());
 		}
@@ -313,6 +313,7 @@ public class NukGui implements MouseListener, ActionListener {
 	// }
 
 	/**
+	 * this.player に影響を与えずに 仮に次のプレーヤーを設定する。一時利用。
 	 * mouseClickdでこのメソッドを使う。 そのマスに石を置けるかどうかを調べるため。
 	 */
 	public Color tempNextPlayer() {
@@ -321,16 +322,19 @@ public class NukGui implements MouseListener, ActionListener {
 	}
 
 	/**
-	 * マウスをクリックしたところにあるマスを取得し、 そのマスの index を取得する。 そのマスが GREEN ならまだ石が置かれていないマスなので
+	 * マウスをクリックしたところにあるマスを取得し、 そのマスの index を取得する。
+	 * そのマスが GREEN ならまだ石が置かれていないマスなので
 	 * 次のプレイヤー(クリックしたプレーヤー)の色の石を置く。
 	 */
 	public void mouseClicked(MouseEvent e) {
 		String alert_txt = "";
+		String info_txt = "";
 		Masu ms = (Masu) e.getComponent();
 		int i = ms.getNum();
+		// info_txt = Integer.toString(i) + ":" + ms.getColor().toString();
 		// System.out.println("mouse:" + i + " Color:" + ms.getColor() );
 		if (ms.getColor().equals(Color.GREEN)) {
-			GameHelper gameHelper = new GameHelper(masu_row, masu_col, board);
+			GameHelper gameHelper = new GameHelper( board );
 			// そこに石を置けるかどうかを調べるため
 			// 仮のプレーヤーを設定する。
 			Color tempPlayer = tempNextPlayer();
@@ -347,7 +351,8 @@ public class NukGui implements MouseListener, ActionListener {
 		} else {
 			alert_txt = "そこにはすでに石が置かれています。";
 		}
-		msg_alert.setText(alert_txt);
+		msg_alert.setText( alert_txt );
+		msg_info.setText( info_txt );
 	}
 
 	public void mousePressed(MouseEvent e) {
@@ -364,22 +369,30 @@ public class NukGui implements MouseListener, ActionListener {
 
 	/**
 	 * 挟んだ敵の石を裏返す。
-	 *
+	 * @param:
+	 *   int serialNum -- 現在地（通し番号）
+	 *   Color player -- その石を置いたプレーヤー（石の色）
+	 * @return: none
 	 */
 	public void flipOver(int serialNum, Color player) {
 		// System.out.println("現在:" + serialNum + "player:" + player );
-		GameHelper gameHelper = new GameHelper(masu_row, masu_col, board);
-		// Direction[] direction = new Direction[8];
-		// direction = gameHelper.setDirection( direction );
+		GameHelper gameHelper = new GameHelper( board );
 
-		MasuData[] neighbors = board.neighbors(serialNum);
+		// 通し番号serialNum の地点の隣の地点を調べる
+		MasuData[] neighbors = board.neighbors( serialNum );
 
-		// for (int i = 0; i < 8; i++) {
-		// System.out.println("neighbors[" + i + "]=" + neighbors[i].getNum() + "
-		// color=" + neighbors[i].getColor());
-		// }
+//		 for (int i = 0; i < 8; i++) {
+//			 System.out.println("NukGui-385: neighbors[" + i + "]=" + neighbors[i].getNum() + "color=" + neighbors[i].getColor());
+//		 }
 
 		// 八方向すべてについて検討する。
+		// i -- 方向を表す
+		//    7 | 0 | 1
+		//   ---+---+---
+		//    6 | * | 2
+		//   ---+---+---
+		//    5 | 4 | 3
+		//
 		for (int i = 0; i < 8; i++) {
 			// 各方向について敵石の数をカウントする。
 			int enemyPoint = gameHelper.countEnemy(i, neighbors[i], player, 0);
@@ -387,11 +400,12 @@ public class NukGui implements MouseListener, ActionListener {
 			if (enemyPoint > 0) {
 				// System.out.println("敵石の方向:" + i + "数:" + enemyPoint );
 				// その次のマス (index と 色) を取得
-				MasuData nextMasu = neighbors[i]; // board.neighbor(i, neighbors[i]);
+				MasuData aNeighbor = neighbors[i]; // board.neighbor(i, neighbors[i]);
 				// System.out.println("そのマス:" + nextMasu.getNum() + " 色:" + nextMasu.getColor());
 				// その次のマスの色がプレーヤーの色と同じでない間は実行
-				while (!nextMasu.getColor().equals(player)) {
-					int index = nextMasu.getNum();
+				while (! aNeighbor.getColor().equals(player)) {
+					int index = aNeighbor.getNum();
+					// System.out.println("NukGui-409:aNeighbor index:" + index + " player:" + aNeighbor.getColor());
 					ImageIcon icon;
 					if (player == Color.WHITE) {
 						icon = whiteIcon;
@@ -403,9 +417,10 @@ public class NukGui implements MouseListener, ActionListener {
 					masu[index].setColor(player);
 					// masuData にも新しいデータを送る。
 					board.get(index).setColor(player);
+					// System.out.println("NukGui-414:aNeighbor index:" + index + " player:" + aNeighbor.getColor());
 					// index = index + direction[i].getDir();
 					// その次のマス (index と 色) を取得
-					nextMasu = board.neighbor(i, neighbors[i]);
+					aNeighbor = board.neighbor(i, aNeighbor);
 					// System.out.println("その次のマス:" + nextMasu.getNum() + " 色:" + nextMasu.getColor());
 				}
 			}

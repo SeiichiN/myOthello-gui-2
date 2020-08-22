@@ -18,9 +18,9 @@ public class Bot {
     private int maxPoint = 0;
     private int masu_num;
 
-    public Bot ( int row, int col, Board board ) {
-        this.row = row;
-        this.col = col;
+    public Bot ( Board board ) {
+        this.row = board.getRow();
+        this.col = board.getCol();
         this.board = board;
         this.masu_num = row * col;
     }
@@ -33,7 +33,7 @@ public class Bot {
         ArrayList <Action> actionList = new ArrayList <> ();
         int point = 0;
         maxPoint = 0;
-        GameHelper gameHelper = new GameHelper( row, col, board );
+        GameHelper gameHelper = new GameHelper( board );
         Action action = null;
         int greenCount = 0;
 
@@ -74,7 +74,7 @@ public class Bot {
         //                             " P:" + ele.getPoint() );
         //     });
         // System.exit(1);
-        System.out.println("maxPoint:" + maxPoint);
+        // System.out.println("maxPoint:" + maxPoint);
 
         // 挟めるコマがない場合
         if (maxPoint == 0) {

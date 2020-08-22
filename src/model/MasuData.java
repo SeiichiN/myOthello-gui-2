@@ -7,7 +7,7 @@ import java.awt.Color;
  * 盤面の情報を保持するクラス
  */
 public class MasuData {
-    private int num = 0;
+    private int num = 0;	// マスのindex番号。0から始まる。
     private Color color = Color.GREEN;
     private int row = 0;
     private int col = 0;

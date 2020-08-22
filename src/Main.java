@@ -21,7 +21,7 @@ public class Main {
         gui.init();
         Color player;
         Action action = null;
-        Bot bot = new Bot( row, col, gui.getBoard() );
+        Bot bot = new Bot( gui.getBoard() );
 
         while (true){
             player = gui.getPlayer();

@@ -6,17 +6,42 @@ import java.util.ArrayList;
 import model.MasuData;
 
 public class Board {
-    private static final int ROW = 6;
-    private static final int COL = 6;
+    private int row = 6;
+    private int col = 6;
     private ArrayList<MasuData> board;
 
     public Board () {
-        board = new ArrayList<MasuData>();
-
-        for (int i = 1; i <= ROW; i++) {
-            for (int t = 1; t <= COL; t++) {
+        board = new ArrayList <MasuData> ();
+        init();
+    }
+    
+    public Board (int row, int col) {
+    	board = new ArrayList <MasuData> ();
+    	this.row = row;
+    	this.col = col;
+    	init();
+    }
+    
+    public int getRow () { return this.row; }
+    public int getCol () { return this.col; }
+    public void setRow (int row) { this.row = row; }
+    public void setCol (int col) { this.col = col; }
+    
+    /**
+     * ボード作成時に初期値をもったデータで
+     * 埋めておく。
+     * 初期値: num -- 0 からの連番
+     *         color -- Color.GREEN
+     */
+    private void init () {
+    	int count = 0;
+        for (int i = 1; i <= this.row; i++) {
+            for (int t = 1; t <= this.col; t++) {
                 MasuData masu = new MasuData( i, t );
+                // System.out.println( "Board:41:count:" + count );
+                masu.setNum( count );
                 board.add( masu );
+                count++;
             }
         }
     }
@@ -42,14 +67,14 @@ public class Board {
      *   0...35
      */
     public int getIndex( int row, int col ) {
-        if (row < 1 || row > ROW) {
-            System.out.println("範囲外");
-            return 0;
-        } else if (col < 1 || col > COL) {
-            System.out.println("範囲外");
-            return 0;
-        }
-        return (row - 1) * COL + (col - 1);
+//        if (row < 1 || row > row) {
+//            System.out.println("範囲外");
+//            return 0;
+//        } else if (col < 1 || col > col) {
+//            System.out.println("範囲外");
+//            return 0;
+//        }
+        return (row - 1) * this.col + (col - 1);
     }
 
     /**
@@ -66,9 +91,9 @@ public class Board {
     }
 
     public MasuData[] neighbors (int index) {
-    	int row = index / COL + 1;
-    	int col = index % COL + 1;
-    	// System.out.println("row:" + row + " col:" + col);
+    	int row = index / this.col + 1;
+    	int col = index % this.col + 1;
+    	// System.out.println("Board-96: row:" + row + " col:" + col);
     	return neighbors( row, col );
     }
 
@@ -88,49 +113,49 @@ public class Board {
     public MasuData[] neighbors (int row, int col) {
         MasuData[] masus = new MasuData[8];
 
-        if (Helper.isOnBoard(row - 1 , col)) {
+        if (isOnBoard(row - 1 , col)) {
             masus[0]= board.get( getIndex( row - 1, col ) );
         } else {
             masus[0] = new MasuData( Color.RED );
         }
 
-        if (Helper.isOnBoard(row - 1 , col + 1)) {
+        if (isOnBoard(row - 1 , col + 1)) {
             masus[1]= board.get( getIndex( row - 1, col + 1) );
         } else {
             masus[1] = new MasuData( Color.RED );
         }
 
-        if (Helper.isOnBoard(row , col + 1)) {
+        if (isOnBoard(row , col + 1)) {
             masus[2]= board.get( getIndex( row, col + 1) );
         } else {
             masus[2] = new MasuData( Color.RED );
         }
 
-        if (Helper.isOnBoard(row + 1, col + 1)) {
+        if (isOnBoard(row + 1, col + 1)) {
             masus[3]= board.get( getIndex( row + 1, col + 1) );
         } else {
             masus[3] = new MasuData( Color.RED );
         }
 
-        if (Helper.isOnBoard(row + 1, col)) {
+        if (isOnBoard(row + 1, col)) {
             masus[4]= board.get( getIndex( row + 1, col) );
         } else {
             masus[4] = new MasuData( Color.RED );
         }
 
-        if (Helper.isOnBoard(row + 1, col - 1)) {
+        if (isOnBoard(row + 1, col - 1)) {
             masus[5]= board.get( getIndex( row + 1, col - 1) );
         } else {
             masus[5] = new MasuData( Color.RED );
         }
 
-        if (Helper.isOnBoard(row, col - 1)) {
+        if (isOnBoard(row, col - 1)) {
             masus[6]= board.get( getIndex( row, col - 1) );
         } else {
             masus[6] = new MasuData( Color.RED );
         }
 
-        if (Helper.isOnBoard(row - 1, col - 1)) {
+        if (isOnBoard(row - 1, col - 1)) {
             masus[7]= board.get( getIndex( row - 1, col - 1) );
         } else {
             masus[7] = new MasuData( Color.RED );
@@ -138,4 +163,16 @@ public class Board {
 
         return masus;
     }
+    
+	public boolean isOnBoard(int y, int x) {
+		if (y < 1)
+			return false;
+		if (y > this.row)
+			return false;
+		if (x < 1)
+			return false;
+		if (x > this.col)
+			return false;
+		return true;
+	}
 }
