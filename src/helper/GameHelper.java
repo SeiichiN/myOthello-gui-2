@@ -27,44 +27,29 @@ public class GameHelper {
 //        this.board = board;
 //    }
 
-    // index位置の x座標 -- 0...6
-    public int getX ( int index ) {
-        return index % col;
-    }
-
-    // index位置の y座標
-    public int getY ( int index ) {
-        return (int)Math.floor( index / col ) ;
-    }
-
-    /**
-     * 八方向それぞれの通し番号位置を調べる。
-     */
-//	    public Direction[] setDirection ( Direction[] direction ) {
-//	    for (int i = 0; i < 8; i++) {
-//	        direction[i] = new Direction();
-//	    }
-//	    direction[0].setDir( - col - 1 );
-//	    direction[1].setDir( - col );
-//	    direction[2].setDir( - col + 1 );
-//	    direction[3].setDir( - 1 );
-//	    direction[4].setDir( + 1 );
-//	    direction[5].setDir( + col - 1 );
-//	    direction[6].setDir( + col );
-//	    direction[7].setDir( + col + 1 );
-//	    return direction;
-//	}
+//    // index位置の x座標 -- 0...6
+//    public int getX ( int index ) {
+//        return index % col;
+//    }
+//
+//    // index位置の y座標
+//    public int getY ( int index ) {
+//        return (int)Math.floor( index / col ) ;
+//    }
 
     /**
      * そのマスにコマを置けるかどうかを調べる
      * @param:
-     *   int serialNum -- 現在のポイント
+     *   int serialNum -- 現在の地点。通し番号。0...36 (6x6の場合)
      *   Color color -- 現在のプレーヤー
+     * @return:
+     *   int point -- そのマスにコマを置いた場合、どれだけの敵コマを
+     *            ひっくり返せるか。その数を返す。
+     *            ゼロなら、そのマスにはコマを置けない。
      */
     public int canMove ( int serialNum, Color player ) {
         int point = 0;
-        // board = new Board ();
-        // board.setBoard( this.board );
+
         MasuData[] neighborData = board.neighbors( serialNum );
         // System.out.println("serialNum:" + serialNum + " player:" + player);
         for (int i = 0; i < 8; i++) {
