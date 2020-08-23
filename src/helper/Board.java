@@ -67,7 +67,7 @@ public class Board implements Cloneable {
     }
 
     public ArrayList<MasuData> getBoard () { return this.arrayMasuData; }
-    public void setBoard( ArrayList<MasuData> _arrayMasuData ) {
+    public void setArrayMasuData( ArrayList<MasuData> _arrayMasuData ) {
         this.arrayMasuData = _arrayMasuData;
     }
 
