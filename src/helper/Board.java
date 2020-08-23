@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import model.MasuData;
 
-public class Board {
+public class Board implements Cloneable {
     private int row = 6;
     private int col = 6;
     private ArrayList<MasuData> arrayMasuData;
@@ -45,12 +45,33 @@ public class Board {
             }
         }
     }
+    
+    @Override
+    public Board clone () {
+    	Board cloneBoard = new Board( this.row, this.col );
+    	// System.out.println("Board-52 size:" + this.arrayMasuData.size());
+    	// System.exit(1);
+    	try {
+    		for (int i = 0; i < this.arrayMasuData.size(); i++) {
+    			MasuData _masuData = this.arrayMasuData.get(i).clone();
+    			// System.out.println("Board-56 this.arrayMasuData(" + i + ") : player:" + this.arrayMasuData.get(i).getColor() );
+    			cloneBoard.arrayMasuData.set( i, _masuData );
+    			// System.out.println("Board-62 i:" + i + " _masuData.player:" + _masuData.getColor());
+    		}
+    	} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("ERROR!");
+		}
+    	
+    	return cloneBoard;
+    }
 
     public ArrayList<MasuData> getBoard () { return this.arrayMasuData; }
     public void setBoard( ArrayList<MasuData> _arrayMasuData ) {
         this.arrayMasuData = _arrayMasuData;
     }
 
+    // index位置 i の　MasuData(マス情報)を返す
     public MasuData get (int i) {
         return arrayMasuData.get( i );
     }
@@ -59,7 +80,20 @@ public class Board {
     	arrayMasuData.add( masuData );
     }
 
+    /*
+     * （デバッグ用）Board の中の要素を一覧する。
+     */
+    public void printAll () {
+    	System.out.println("-----------------------< printAll >---------------------------");
+    	this.arrayMasuData.forEach( ele -> {
+    		System.out.println("Y:" + getY(ele.getNum()) + " X:" + getX(ele.getNum()) + " " + ele.getColor());
+    	});
+    	System.out.println("-----------------------< printAll END >---------------------------");
+    }
+    
     /**
+     * (row, col)の位置の index位置を返す
+     * 
      * @param:
      *   row -- 1...6
      *   col -- 1...6
@@ -75,6 +109,26 @@ public class Board {
 //            return 0;
 //        }
         return (row - 1) * this.col + (col - 1);
+    }
+    
+    /**
+     * index位置の Y 座標を返す
+     * 
+     * @param int index
+     * @return int Y座標
+     */
+    public int getY( int index ) {
+    	return index / this.col + 1;
+    }
+    
+    /**
+     * index 位置の x 座標を返す
+     * 
+     * @param int index
+     * @return int x座標
+     */
+    public int getX( int index ) {
+    	return index % this.col + 1;
     }
 
     /**

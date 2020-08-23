@@ -33,7 +33,7 @@ public class Action {
     public void setIndex ( int index ) { this.index = index; }
     public void setPoint ( int point ) { this.point = point; }
 
-    public void index2xy ( int index, int col ) {
+    public void setIndexXY( int index, int col ) {
         this.index = index;
         this.y = (int) Math.floor( index / col ) + 1;
         this.x = index % col + 1;

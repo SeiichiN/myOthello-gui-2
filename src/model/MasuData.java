@@ -6,7 +6,7 @@ import java.awt.Color;
 /**
  * 盤面の情報を保持するクラス
  */
-public class MasuData {
+public class MasuData implements Cloneable {
     private int num = 0;	// マスのindex番号。0から始まる。
     private Color color = Color.GREEN;
     private int row = 0;
@@ -33,6 +33,18 @@ public class MasuData {
     public void setRow ( int row ) { this.row = row; }
     public int getCol () { return this.col; }
     public void setCol ( int col ) { this.col = col; }
+    
+    @Override
+    public MasuData clone () {
+    	MasuData _data = new MasuData();
+		try {
+			_data.num = this.num;
+			_data.color = this.color;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	return _data;
+    }
 }
 
 // 修正時刻: Sun Aug  9 09:18:54 2020

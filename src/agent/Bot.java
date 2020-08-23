@@ -32,9 +32,10 @@ public class Bot {
     public Action selectMove () {
         ArrayList <Action> actionList = new ArrayList <> ();
         int point = 0;
+        int enemyPoint = 0;
         maxPoint = 0;
         GameHelper gameHelper = new GameHelper( board );
-        Action action = null;
+        // Action action = null;
         int greenCount = 0;
 
         for (int i = 0; i < masu_num; i++) {
@@ -44,29 +45,48 @@ public class Bot {
 
                 // pointがあるということは、挟める石があるということ
                 point = gameHelper.canMove( i, Color.WHITE );
+                
+                enemyPoint = gameHelper.enemySelectMove( i, board, Color.WHITE );
+                
+                // System.out.println("Y:" + board.getY(i) + " X:" + board.getX(i) + " point:" + point + " enemyPoint:" + enemyPoint );
 
                 // もし i が盤面のかどならば、10ポイントをプラス。
                 // こうすると、よりつよくなるだろう。
                 if (point > 0) {
                     // もし i が盤面のへんならば、5ポイントをプラス。
-                    if (i % col == 0 || i % col == (col - 1)) {
-                        point = point + 5;
-                    }
-                    int _row = (int)Math.floor( i / col );
-                    if ( _row == 0 || _row == (row - 1) ) {
-                        point = point + 5;
-                    }
+                    // if (i % col == 0 || i % col == (col - 1)) {
+                    //    point = point + 5;
+                    // }
+                	if (board.getX(i) == 1 || board.getX(i) == this.col) {
+                		point = point + 5;
+                	}
+                	if (board.getY(i) == 1 || board.getY(i) == this.row) {
+                		point = point + 5;
+                	}
+//                    int _row = (int)Math.floor( i / col );
+//                    if ( _row == 0 || _row == (row - 1) ) {
+//                        point = point + 5;
+//                    }
+                    // point = point - enemyPoint;
+                	
+                    // if (point < 1) point = 0;
 
                     if (point > maxPoint) {
                         maxPoint = point;
                     }
-                    action = new Action();
-                    action.index2xy( i, col );
+                    Action action = new Action();
+                    action.setIndexXY( i, this.col );
                     action.setPoint( point );
                     actionList.add( action );
                 }
             }
+            // else {
+            //	// System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+            //	continue;
+            // }
         }
+        // System.out.println("Bot-85:-----------------------------------------");
+        
         // for DEBUG
         // actionList.forEach ( ele -> {
         //         System.out.println( "Y:"+ ele.getY() +
@@ -78,7 +98,7 @@ public class Bot {
 
         // 挟めるコマがない場合
         if (maxPoint == 0) {
-            action = new Action();
+            Action action = new Action();
             if (greenCount == 0) {
                 action.isEnd = true;
             }
@@ -92,16 +112,20 @@ public class Bot {
             return action;
         }
 
-
+        // pointが最も高い action のリストを作成する。
         ArrayList <Action> bestActionList = new ArrayList <> ();
 
-        maxPoint = 0;
+        maxPoint = -1; // ele.getPoint() が -1 になることはない。
         actionList.forEach( ele -> {
-                if (ele.getPoint() > maxPoint) {
-                    maxPoint = ele.getPoint();
-                    bestActionList.add( ele );
-                }
-            });
+			if (ele.getPoint() > maxPoint) {
+				maxPoint = ele.getPoint();
+				bestActionList.clear();
+				bestActionList.add(ele);
+			}
+			if (ele.getPoint() == maxPoint) {
+				bestActionList.add(ele);
+			}
+		});
         int index = new Random().nextInt( bestActionList.size() );
         Action bestAction = bestActionList.get( index );
         // for DEBUG
