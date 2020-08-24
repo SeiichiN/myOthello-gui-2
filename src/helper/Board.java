@@ -14,19 +14,19 @@ public class Board implements Cloneable {
         arrayMasuData = new ArrayList <MasuData> ();
         init();
     }
-    
+
     public Board (int row, int col) {
     	arrayMasuData = new ArrayList <MasuData> ();
     	this.row = row;
     	this.col = col;
     	init();
     }
-    
+
     public int getRow () { return this.row; }
     public int getCol () { return this.col; }
     public void setRow (int row) { this.row = row; }
     public void setCol (int col) { this.col = col; }
-    
+
     /**
      * ボード作成時に初期値をもったデータで
      * 埋めておく。
@@ -45,7 +45,7 @@ public class Board implements Cloneable {
             }
         }
     }
-    
+
     @Override
     public Board clone () {
     	Board cloneBoard = new Board( this.row, this.col );
@@ -62,7 +62,7 @@ public class Board implements Cloneable {
 			e.printStackTrace();
 			System.out.println("ERROR!");
 		}
-    	
+
     	return cloneBoard;
     }
 
@@ -90,10 +90,21 @@ public class Board implements Cloneable {
     	});
     	System.out.println("-----------------------< printAll END >---------------------------");
     }
-    
+
+    /*
+     * （デバッグ用）Board の中の要素を一覧する。
+     */
+    public void printAll (String text) {
+    	System.out.println("-----------------------< " + text + " - printAll >---------------------------");
+    	this.arrayMasuData.forEach( ele -> {
+    		System.out.println("Y:" + getY(ele.getNum()) + " X:" + getX(ele.getNum()) + " " + ele.getColor());
+    	});
+    	System.out.println("-----------------------< printAll END >---------------------------");
+    }
+
     /**
      * (row, col)の位置の index位置を返す
-     * 
+     *
      * @param:
      *   row -- 1...6
      *   col -- 1...6
@@ -110,20 +121,20 @@ public class Board implements Cloneable {
 //        }
         return (row - 1) * this.col + (col - 1);
     }
-    
+
     /**
      * index位置の Y 座標を返す
-     * 
+     *
      * @param int index
      * @return int Y座標
      */
     public int getY( int index ) {
     	return index / this.col + 1;
     }
-    
+
     /**
      * index 位置の x 座標を返す
-     * 
+     *
      * @param int index
      * @return int x座標
      */
@@ -164,7 +175,7 @@ public class Board implements Cloneable {
      *   6 | * | 2
      *  ---+---+---
      *   5 | 4 | 3
-     *   
+     *
      *   隣の地点は全部で8個ある。もしその地点が盤外なら
      *   Color.RED とする。
      *   盤外でなかったら、その地点の情報をセットする。
@@ -230,7 +241,7 @@ public class Board implements Cloneable {
 
         return masus;
     }
-    
+
 	public boolean isOnBoard(int y, int x) {
 		if (y < 1)
 			return false;

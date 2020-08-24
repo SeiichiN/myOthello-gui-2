@@ -3,52 +3,72 @@ package test;
 import java.awt.Color;
 import java.util.ArrayList;
 
-import model.MasuData;
 import helper.Board;
 import helper.GameHelper;
+import model.MasuData;
 
 public class GameHelperTest {
 	private static int row = 8;
 	private static int col = 8;
-	
+
 	public GameHelperTest () {}
-	
+
 	public static void main (String [] args) {
-		
+
 		Board board = new Board( row, col );
-		
+
+		// 最初に中央に4つのコマを置く。黒白黒白
 		init( board );
-		
+		// 29(Y:4 X:6) の地点に黒を置いたとする。
+		board.get( 29 ).setColor( Color.BLACK );
+
+		// gameHelperインスタンスを作成
 		GameHelper gameHelper = new GameHelper( board );
-		
-		int point = gameHelper.enemySelectMove( 39, board, Color.BLACK );
-		System.out.println("point: " + point );
-		board.printAll();
-		
+		// 29に黒を置いたので、挟んだ白をひっくり返す
+		gameHelper.flipOverReal( 29, Color.BLACK);
+
+//		int point = gameHelper.enemySelectMove( 21, board, Color.WHITE );
+//		board.get(21).setColor( Color.WHITE );
+//		gameHelper.flipOverReal(21, Color.WHITE);
+//		System.out.println("point: " + point );
+//		board.printAll("board");
+
+		// 21(Y:3 X:6) の地点に白を置いた場合、敵（黒）は何ポイント得るだろうか？
+		for (int i = 0; i < 64 ; i++) {
+			if (i == 19 || i == 21 || i == 37) {
+
+				int enemyPoint = gameHelper.virtualSelectMove(i, board, Color.WHITE);
+
+				System.out.println("Y:" + board.getY(i) +
+						" X:" + board.getX(i) +
+						" enemyPoint:" + enemyPoint);
+			}
+		}
 	}
-	
+
 	public static void init (Board board) {
-		
+
 		ArrayList <MasuData> arrayMasuData = new ArrayList <> ();
-		
+
 		for (int i = 0; i < 64; i++) {
 			MasuData masuData = new MasuData( row, col );
 			masuData.setNum( i );
 			masuData.setColor( Color.GREEN );
 			arrayMasuData.add( masuData );
 		}
-		
-		int initA = 27;
-		int initB = 28;
-		int initC = 35;
-		int initD = 36;
-		
+
+		int initA = 27; // Black
+		int initB = 28; // White
+		int initC = 35; // White
+		int initD = 36; // Black
+
 		arrayMasuData.get( initA ).setColor( Color.BLACK );
-		arrayMasuData.get( initB ).setColor( Color.white );
-		arrayMasuData.get( initC ).setColor( Color.BLACK );
-		arrayMasuData.get( initD ).setColor( Color.white );
-		
+		arrayMasuData.get( initB ).setColor( Color.WHITE );
+		arrayMasuData.get( initC ).setColor( Color.WHITE );
+		arrayMasuData.get( initD ).setColor( Color.BLACK );
+
 		board.setArrayMasuData( arrayMasuData );
 	}
-	
+
+
 }
