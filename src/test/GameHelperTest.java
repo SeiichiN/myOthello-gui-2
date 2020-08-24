@@ -51,7 +51,7 @@ public class GameHelperTest {
 		ArrayList <MasuData> arrayMasuData = new ArrayList <> ();
 
 		for (int i = 0; i < 64; i++) {
-			MasuData masuData = new MasuData( row, col );
+			MasuData masuData = new MasuData();
 			masuData.setNum( i );
 			masuData.setColor( Color.GREEN );
 			arrayMasuData.add( masuData );

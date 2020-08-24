@@ -45,9 +45,9 @@ public class Bot {
 
                 // pointがあるということは、挟める石があるということ
                 point = gameHelper.canMove( i, Color.WHITE );
-                
-                enemyPoint = gameHelper.enemySelectMove( i, board, Color.WHITE );
-                
+
+                enemyPoint = gameHelper.virtualSelectMove( i, board, Color.WHITE );
+
                 // System.out.println("Y:" + board.getY(i) + " X:" + board.getX(i) + " point:" + point + " enemyPoint:" + enemyPoint );
 
                 // もし i が盤面のかどならば、10ポイントをプラス。
@@ -68,7 +68,7 @@ public class Bot {
 //                        point = point + 5;
 //                    }
                     // point = point - enemyPoint;
-                	
+
                     // if (point < 1) point = 0;
 
                     if (point > maxPoint) {
@@ -86,7 +86,7 @@ public class Bot {
             // }
         }
         // System.out.println("Bot-85:-----------------------------------------");
-        
+
         // for DEBUG
         // actionList.forEach ( ele -> {
         //         System.out.println( "Y:"+ ele.getY() +

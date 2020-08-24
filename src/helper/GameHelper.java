@@ -7,35 +7,11 @@ import java.awt.Color;
 import model.MasuData;
 
 public class GameHelper {
-    private int row = 6;
-    private int col = 6;
-    private int board_masu_num = 36;
     private Board board;
-    private MasuData masudata;
-    private int enemyPoint = 0;
 
     public GameHelper( Board board ) {
         this.board = board;
-        this.row = board.getRow();
-        this.col = board.getCol();
-        this.board_masu_num = this.row * this.col;
     }
-//    public GameHelper( int row, int col, Board board ) {
-//        this.row = row;
-//        this.col = col;
-//        this.board_masu_num = row * col;
-//        this.board = board;
-//    }
-
-//    // index位置の x座標 -- 0...6
-//    public int getX ( int index ) {
-//        return index % col;
-//    }
-//
-//    // index位置の y座標
-//    public int getY ( int index ) {
-//        return (int)Math.floor( index / col ) ;
-//    }
 
     /**
      * そのマスにコマを置けるかどうかを調べる

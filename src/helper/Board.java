@@ -37,7 +37,7 @@ public class Board implements Cloneable {
     	int count = 0;
         for (int i = 1; i <= this.row; i++) {
             for (int t = 1; t <= this.col; t++) {
-                MasuData masu = new MasuData( i, t );
+                MasuData masu = new MasuData();
                 // System.out.println( "Board:41:count:" + count );
                 masu.setNum( count );
                 arrayMasuData.add( masu );
