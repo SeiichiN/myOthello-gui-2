@@ -2,13 +2,15 @@
 
 package model;
 
-import java.util.*;
+import java.io.Serializable;
 
 /**
  * Actionクラス -- Cの構造体のように使うためのクラス
  */
-public class Action {
-    private int x = 0;
+public class Action implements Serializable {
+    
+	private static final long serialVersionUID = 1L;
+	private int x = 0;
     private int y = 0;
     private int index = 0;
     private int point = 0;

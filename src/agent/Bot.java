@@ -48,28 +48,24 @@ public class Bot {
 
                 enemyPoint = gameHelper.virtualSelectMove( i, board, Color.WHITE );
 
-                // System.out.println("Y:" + board.getY(i) + " X:" + board.getX(i) + " point:" + point + " enemyPoint:" + enemyPoint );
-
-                // もし i が盤面のかどならば、10ポイントをプラス。
-                // こうすると、よりつよくなるだろう。
+                if (point > 0 && enemyPoint >= 0)
+                	System.out.println("Bot-52 Y:" + board.getY(i) + " X:" + board.getX(i) + " point:" + point + " enemyPoint:" + enemyPoint );
+                
                 if (point > 0) {
                     // もし i が盤面のへんならば、5ポイントをプラス。
                     // if (i % col == 0 || i % col == (col - 1)) {
                     //    point = point + 5;
                     // }
-                	if (board.getX(i) == 1 || board.getX(i) == this.col) {
-                		point = point + 5;
-                	}
-                	if (board.getY(i) == 1 || board.getY(i) == this.row) {
-                		point = point + 5;
-                	}
-//                    int _row = (int)Math.floor( i / col );
-//                    if ( _row == 0 || _row == (row - 1) ) {
-//                        point = point + 5;
-//                    }
-                    // point = point - enemyPoint;
+                	if (board.getX(i) == 1 || board.getX(i) == this.col) point = point + 5;
+                	if (board.getY(i) == 1 || board.getY(i) == this.row) point = point + 5;
+                	
+                	point = point - enemyPoint;
+                	if (point <= 0) point = 1;
+                }
 
-                    // if (point < 1) point = 0;
+                // もし i が盤面のかどならば、10ポイントをプラス。
+                // こうすると、よりつよくなるだろう。
+                if (point > 0) {
 
                     if (point > maxPoint) {
                         maxPoint = point;
@@ -117,11 +113,14 @@ public class Bot {
 
         maxPoint = -1; // ele.getPoint() が -1 になることはない。
         actionList.forEach( ele -> {
+        	// ele.getPoint() が maxPoint よりも大きい場合、maxPointを更新して、
+        	// bestActionListをクリアしたのち、bestActionListを作り直す。
 			if (ele.getPoint() > maxPoint) {
 				maxPoint = ele.getPoint();
 				bestActionList.clear();
 				bestActionList.add(ele);
 			}
+			// ele.getPoint() が maxPoint と同じ場合、bestActionList に追加する。
 			if (ele.getPoint() == maxPoint) {
 				bestActionList.add(ele);
 			}

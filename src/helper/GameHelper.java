@@ -93,7 +93,7 @@ public class GameHelper {
      * @return int point -- 敵の指し手のポイント（マイナス値になる）
      */
     public int virtualSelectMove( int index, Board board, Color player ) {
-    	int enemyPoint = 0;
+    	int maxEnemyPoint = 0;
 
     	Board nextBoard = null;
 
@@ -112,9 +112,9 @@ public class GameHelper {
     	// それぞれ、その地点に黒が石を置いたとして、黒は何ポイント得ることができるか？
     	for (int i = 0; i < 8; i++) {
     		MasuData[] neighbors = nextBoard.neighbors( index );
-    		int point = canMoveVirtual( neighbors[i].getNum(), enemyPlayer, nextBoard );
+    		int enemyPoint = canMoveVirtual( neighbors[i].getNum(), enemyPlayer, nextBoard );
     		// enemyPoint と point を比べて、point の方が大きければ、それを enemyPoint とする。
-    		enemyPoint = ( point > enemyPoint ) ? point : enemyPoint;
+    		maxEnemyPoint = ( enemyPoint > maxEnemyPoint ) ? enemyPoint : maxEnemyPoint;
 //    		System.out.println("GameHelper-141 方向:" + i +
 //    				" Point:" + point + "allPoint:" + enemyPoint +
 //    				" Player:" + enemyPlayer );
@@ -125,7 +125,7 @@ public class GameHelper {
         // 一覧
         // nextBoard.printAll("nextNextBoard");
 
-    	return enemyPoint;
+    	return maxEnemyPoint;
     }
 
     /**
@@ -143,11 +143,12 @@ public class GameHelper {
         int point = 0;
 
         MasuData[] neighborData = vBoard.neighbors( index );
+        
         // System.out.println("serialNum:" + serialNum + " player:" + player);
         for (int i = 0; i < 8; i++) {
             // System.out.println("GameHelper-162 neighbor[i]:" + i + " color:" + neighborData[i].getColor() );
-            point = point + countEnemyVirtual( i, neighborData[i], player, 0, vBoard );
-            // System.out.println("GameHelper-164 now point:" + point);
+            point = point + countEnemyVirtual( i, neighborData[i], player, 0, vBoard);
+
         }
 
         return point;
@@ -184,13 +185,20 @@ public class GameHelper {
             MasuData nextNeighbor = vBoard.neighbor( direction,  neighbor );
             // System.out.println("次の地点:" + nextMasu.getNum() + " nextMasu:" + nextMasu.getColor());
             // nextNeighbor を引数にして再帰処理
-            return countEnemyVirtual( direction, nextNeighbor, player, point, vBoard ) ;
+            return countEnemyVirtual( direction, nextNeighbor, player, point, vBoard) ;
         }
 
         // もしその方向の隣が味方の石だったら、現在のポイントを返す。
         // 敵石が無くてすぐに味方の石だったら、現在のポイントは 0 である。
         if ( neighbor.getColor().equals( player )) {
-            // System.out.println("味方の石!:" + neighbor.getNum() + "point:" + point );
+        	if (point > 0 && (neighbor.getYPos() == 1 || neighbor.getYPos() == board.getRow()))
+        		point = point + 5;
+        	if (point > 0 && (neighbor.getXPos() == 1 || neighbor.getXPos() == board.getCol()))
+        		point = point + 5;
+
+//        	if (point > 0)
+//        		System.out.println("GameHelper-199 point:" + point);
+        	
             return point;
         }
 

@@ -144,6 +144,8 @@ public class NukGui implements MouseListener, ActionListener {
 			// 各マスは、index情報と color情報を持っている。
 			masu[i] = new Masu();
 			masu[i].setNum(i);
+			masu[i].setYPos( getY(i) );
+			masu[i].setXPos( getX(i) );
 			// マスの初期colorは、GREEN である。
 			masu[i].setColor(Color.GREEN);
 			masu[i].setBorder(border);
@@ -217,6 +219,8 @@ public class NukGui implements MouseListener, ActionListener {
 		for (int i = 0; i < board_masu_num; i++) {
 			board.get(i).setNum( masu[i].getNum() );
 			board.get(i).setColor( masu[i].getColor() );
+			board.get(i).setYPos( masu[i].getYPos() );
+			board.get(i).setXpos( masu[i].getXPos() );
 		}
 	}
 
@@ -498,22 +502,20 @@ public class NukGui implements MouseListener, ActionListener {
 	class Masu extends JButton {
 		private int num;
 		private Color color;
+		private int xPos;
+		private int yPos;
 
-		public int getNum() {
-			return this.num;
-		}
+		public int getNum() { return this.num; }
+		public void setNum(int num) { this.num = num; }
 
-		public void setNum(int num) {
-			this.num = num;
-		}
-
-		public Color getColor() {
-			return this.color;
-		}
-
-		public void setColor(Color color) {
-			this.color = color;
-		}
+		public Color getColor() { return this.color; }
+		public void setColor(Color color) { this.color = color;	}
+		
+		public int getXPos() { return this.xPos; }
+		public void setXPos( int x ) { this.xPos = x; }
+		
+		public int getYPos() { return this.yPos; }
+		public void setYPos( int y ) { this.yPos = y; }
 
 		// public void paintComponent( Graphics g) {
 		// g.setColor( Color.GREEN );

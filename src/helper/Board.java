@@ -157,10 +157,10 @@ public class Board implements Cloneable {
     }
 
     public MasuData[] neighbors (int index) {
-    	int row = index / this.col + 1;
-    	int col = index % this.col + 1;
+    	int yPos = index / this.col + 1;
+    	int xPos = index % this.col + 1;
     	// System.out.println("Board-96: row:" + row + " col:" + col);
-    	return neighbors( row, col );
+    	return neighbors( yPos, xPos );
     }
 
     /**
@@ -180,61 +180,61 @@ public class Board implements Cloneable {
      *   Color.RED とする。
      *   盤外でなかったら、その地点の情報をセットする。
      */
-    public MasuData[] neighbors (int row, int col) {
+    public MasuData[] neighbors (int yPos, int xPos) {
         MasuData[] masus = new MasuData[8];
 
         // 0
-        if (isOnBoard(row - 1 , col)) {
-            masus[0]= arrayMasuData.get( getIndex( row - 1, col ) );
+        if (isOnBoard(yPos - 1 , xPos)) {
+            masus[0]= arrayMasuData.get( getIndex( yPos - 1, xPos ) );
         } else {
             masus[0] = new MasuData( Color.RED );
         }
 
         // 1
-        if (isOnBoard(row - 1 , col + 1)) {
-            masus[1]= arrayMasuData.get( getIndex( row - 1, col + 1) );
+        if (isOnBoard(yPos - 1 , xPos + 1)) {
+            masus[1]= arrayMasuData.get( getIndex( yPos - 1, xPos + 1) );
         } else {
             masus[1] = new MasuData( Color.RED );
         }
 
         // 2
-        if (isOnBoard(row , col + 1)) {
-            masus[2]= arrayMasuData.get( getIndex( row, col + 1) );
+        if (isOnBoard(yPos , xPos + 1)) {
+            masus[2]= arrayMasuData.get( getIndex( yPos, xPos + 1) );
         } else {
             masus[2] = new MasuData( Color.RED );
         }
 
         // 3
-        if (isOnBoard(row + 1, col + 1)) {
-            masus[3]= arrayMasuData.get( getIndex( row + 1, col + 1) );
+        if (isOnBoard(yPos + 1, xPos + 1)) {
+            masus[3]= arrayMasuData.get( getIndex( yPos + 1, xPos + 1) );
         } else {
             masus[3] = new MasuData( Color.RED );
         }
 
         // 4
-        if (isOnBoard(row + 1, col)) {
-            masus[4]= arrayMasuData.get( getIndex( row + 1, col) );
+        if (isOnBoard(yPos + 1, xPos)) {
+            masus[4]= arrayMasuData.get( getIndex( yPos + 1, xPos) );
         } else {
             masus[4] = new MasuData( Color.RED );
         }
 
         // 5
-        if (isOnBoard(row + 1, col - 1)) {
-            masus[5]= arrayMasuData.get( getIndex( row + 1, col - 1) );
+        if (isOnBoard(yPos + 1, xPos - 1)) {
+            masus[5]= arrayMasuData.get( getIndex( yPos + 1, xPos - 1) );
         } else {
             masus[5] = new MasuData( Color.RED );
         }
 
         // 6
-        if (isOnBoard(row, col - 1)) {
-            masus[6]= arrayMasuData.get( getIndex( row, col - 1) );
+        if (isOnBoard(yPos, xPos - 1)) {
+            masus[6]= arrayMasuData.get( getIndex( yPos, xPos - 1) );
         } else {
             masus[6] = new MasuData( Color.RED );
         }
 
         // 7
-        if (isOnBoard(row - 1, col - 1)) {
-            masus[7]= arrayMasuData.get( getIndex( row - 1, col - 1) );
+        if (isOnBoard(yPos - 1, xPos - 1)) {
+            masus[7]= arrayMasuData.get( getIndex( yPos - 1, xPos - 1) );
         } else {
             masus[7] = new MasuData( Color.RED );
         }
@@ -245,7 +245,7 @@ public class Board implements Cloneable {
 	public boolean isOnBoard(int y, int x) {
 		if (y < 1)
 			return false;
-		if (y > this.row)
+		if (y > this.col)
 			return false;
 		if (x < 1)
 			return false;
