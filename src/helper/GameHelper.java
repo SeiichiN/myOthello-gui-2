@@ -7,206 +7,204 @@ import java.awt.Color;
 import model.MasuData;
 
 public class GameHelper {
-    private Board board;
+	private Board board;
 
-    public GameHelper( Board board ) {
-        this.board = board;
-    }
+	public GameHelper(Board board) {
+		this.board = board;
+	}
 
-    /**
-     * そのマスにコマを置けるかどうかを調べる
-     * @param:
-     *   int serialNum -- 現在の地点。通し番号。0...36 (6x6の場合)
-     *   Color color -- 現在のプレーヤー
-     * @return:
-     *   int point -- そのマスにコマを置いた場合、どれだけの敵コマを
-     *            ひっくり返せるか。その数を返す。
-     *            ゼロなら、そのマスにはコマを置けない。
-     */
-    public int canMove ( int serialNum, Color player ) {
-        int point = 0;
+	/**
+	 * そのマスにコマを置けるかどうかを調べる
+	 * @param:
+	 *   int serialNum -- 現在の地点。通し番号。0...36 (6x6の場合)
+	 *   Color color -- 現在のプレーヤー
+	 * @return:
+	 *   int point -- そのマスにコマを置いた場合、どれだけの敵コマを
+	 *            ひっくり返せるか。その数を返す。
+	 *            ゼロなら、そのマスにはコマを置けない。
+	 */
+	public int canMove(int serialNum, Color player) {
+		int point = 0;
 
-        MasuData[] neighborData = board.neighbors( serialNum );
-        // System.out.println("serialNum:" + serialNum + " player:" + player);
-        for (int i = 0; i < 8; i++) {
-            // System.out.println("masuData  i:" + i + " color:" + neighborData[i].getColor() );
-            point = point + countEnemy( i, neighborData[i], player, 0 );
-            // System.out.println("now point:" + point);
-        }
-        return point;
-    }
+		MasuData[] neighborData = board.neighbors(serialNum);
+		// System.out.println("serialNum:" + serialNum + " player:" + player);
+		for (int i = 0; i < 8; i++) {
+			// System.out.println("masuData  i:" + i + " color:" + neighborData[i].getColor() );
+			point = point + countEnemy(i, neighborData[i], player, 0);
+			// System.out.println("now point:" + point);
+		}
+		return point;
+	}
 
-    /**
-     * countEnemy -- その方向に敵コマがどれだけいるかを調べる。
-     * @param direction -- 7 | 0 | 1
-     *                     ---+---+---
-     *                      6 | * | 2
-     *                     ---+---+---
-     *                      5 | 4 | 3
-     *
-     * @param neighbor  -- 調べたい地点のマスデータ(neighbors[i])
-     * @param player    -- 現在のプレーヤー
-     * @param point     -- 敵がいれば point が増える。初期値として 0 が渡される。
-     * @return
-     */
-    public int countEnemy ( int direction, MasuData neighbor, Color player, int point ) {
+	/**
+	 * countEnemy -- その方向に敵コマがどれだけいるかを調べる。
+	 * @param direction -- 7 | 0 | 1
+	 *                     ---+---+---
+	 *                      6 | * | 2
+	 *                     ---+---+---
+	 *                      5 | 4 | 3
+	 *
+	 * @param neighbor  -- 調べたい地点のマスデータ(neighbors[i])
+	 * @param player    -- 現在のプレーヤー
+	 * @param point     -- 敵がいれば point が増える。初期値として 0 が渡される。
+	 * @return
+	 */
+	public int countEnemy(int direction, MasuData neighbor, Color player, int point) {
 
-        // 敵プレーヤー
-        Color enemy = (player.equals( Color.BLACK )) ? Color.WHITE : Color.BLACK;
+		// 敵プレーヤー
+		Color enemy = (player.equals(Color.BLACK)) ? Color.WHITE : Color.BLACK;
 
-        // もしその方向の隣が敵石だったら、ポイントを1プラスして、
-        // さらにその方向に調査をすすめる。
-        if ( neighbor.getColor().equals( enemy ) ) {
-            // System.out.println("敵石見っけ!");
-            point++;
-            // System.out.println("現在:" + masuData.getNum() + " 次の方向:" + direction );
-            // neighborのそのまたneighborの地点のマスを取得
-            MasuData nextNeighbor = board.neighbor( direction,  neighbor );
-            // System.out.println("次の地点:" + nextMasu.getNum() + " nextMasu:" + nextMasu.getColor());
-            // nextNeighbor を引数にして再帰処理
-            return countEnemy( direction, nextNeighbor, player, point ) ;
-        }
+		// もしその方向の隣が敵石だったら、ポイントを1プラスして、
+		// さらにその方向に調査をすすめる。
+		if (neighbor.getColor().equals(enemy)) {
+			// System.out.println("敵石見っけ!");
+			point++;
+			// System.out.println("現在:" + masuData.getNum() + " 次の方向:" + direction );
+			// neighborのそのまたneighborの地点のマスを取得
+			MasuData nextNeighbor = board.neighbor(direction, neighbor);
+			// System.out.println("次の地点:" + nextMasu.getNum() + " nextMasu:" + nextMasu.getColor());
+			// nextNeighbor を引数にして再帰処理
+			return countEnemy(direction, nextNeighbor, player, point);
+		}
 
-        // もしその方向の隣が味方の石だったら、現在のポイントを返す。
-        // 敵石が無くてすぐに味方の石だったら、現在のポイントは 0 である。
-        if ( neighbor.getColor().equals( player )) {
-            // System.out.println("味方の石!:" + masuData.getNum() + "point:" + point );
-            return point;
-        }
+		// もしその方向の隣が味方の石だったら、現在のポイントを返す。
+		// 敵石が無くてすぐに味方の石だったら、現在のポイントは 0 である。
+		if (neighbor.getColor().equals(player)) {
+			// System.out.println("味方の石!:" + masuData.getNum() + "point:" + point );
+			return point;
+		}
 
-        // その方向に石が無い、つまり緑であれば、ゼロである。
-        // 仮に敵石が続いてのち緑であれば、ポイントはゼロになる。
-        // しかし、この return が処理されることはないだろう。
-        return 0;
-    }
+		// その方向に石が無い、つまり緑であれば、ゼロである。
+		// 仮に敵石が続いてのち緑であれば、ポイントはゼロになる。
+		// しかし、この return が処理されることはないだろう。
+		return 0;
+	}
 
+	/**
+	 * 敵の手を考慮に入れた指し手を考える
+	 *
+	 * 仮に白（ボット）が index の地点に石を置いたとする。
+	 *
+	 * @param int index -- 検討すべき指し手の index番号
+	 * @param board     -- 検討土台の盤面
+	 * @param player    -- 現在のプレーヤー
+	 * @return int point -- 敵の指し手のポイント（マイナス値になる）
+	 */
+	public int virtualSelectMove(int index, Board board, Color player) {
+		int maxEnemyPoint = 0;
 
+		Board nextBoard = null;
 
-    /**
-     * 敵の手を考慮に入れた指し手を考える
-     *
-     * 仮に白（ボット）が index の地点に石を置いたとする。
-     *
-     * @param int index -- 検討すべき指し手の index番号
-     * @param board     -- 検討土台の盤面
-     * @param player    -- 現在のプレーヤー
-     * @return int point -- 敵の指し手のポイント（マイナス値になる）
-     */
-    public int virtualSelectMove( int index, Board board, Color player ) {
-    	int maxEnemyPoint = 0;
+		nextBoard = board.clone(); // 仮想の盤面をつくる。
 
-    	Board nextBoard = null;
+		// 仮想の盤面に引数で受け取った player(ボット、白） の指し手を適用する。
+		nextBoard.get(index).setColor(player);
 
-    	nextBoard = board.clone();    // 仮想の盤面をつくる。
+		// nextBoard.printAll();
 
-    	// 仮想の盤面に引数で受け取った player(ボット、白） の指し手を適用する。
-    	nextBoard.get( index ).setColor( player );
+		// プレーヤーを敵(黒)に設定する
+		Color enemyPlayer = (player.equals(Color.BLACK)) ? Color.WHITE : Color.BLACK;
+		// System.out.println("player:" + enemyPlayer);
 
-    	// nextBoard.printAll();
+		// 白が仮に石を置いた地点の周囲について、検討する。
+		// それぞれ、その地点に黒が石を置いたとして、黒は何ポイント得ることができるか？
+		for (int i = 0; i < 8; i++) {
+			MasuData[] neighbors = nextBoard.neighbors(index);
+			int enemyPoint = canMoveVirtual(neighbors[i].getNum(), enemyPlayer, nextBoard);
+			// enemyPoint と point を比べて、point の方が大きければ、それを enemyPoint とする。
+			maxEnemyPoint = (enemyPoint > maxEnemyPoint) ? enemyPoint : maxEnemyPoint;
+			//    		System.out.println("GameHelper-141 方向:" + i +
+			//    				" Point:" + point + "allPoint:" + enemyPoint +
+			//    				" Player:" + enemyPlayer );
+		}
 
-    	// プレーヤーを敵(黒)に設定する
-    	Color enemyPlayer = ( player.equals(Color.BLACK) ) ? Color.WHITE : Color.BLACK;
-    	// System.out.println("player:" + enemyPlayer);
+		// 挟んでいる石を裏がえす
+		flipOverVirtual(index, player, nextBoard);
+		// 一覧
+		// nextBoard.printAll("nextNextBoard");
 
-    	// 白が仮に石を置いた地点の周囲について、検討する。
-    	// それぞれ、その地点に黒が石を置いたとして、黒は何ポイント得ることができるか？
-    	for (int i = 0; i < 8; i++) {
-    		MasuData[] neighbors = nextBoard.neighbors( index );
-    		int enemyPoint = canMoveVirtual( neighbors[i].getNum(), enemyPlayer, nextBoard );
-    		// enemyPoint と point を比べて、point の方が大きければ、それを enemyPoint とする。
-    		maxEnemyPoint = ( enemyPoint > maxEnemyPoint ) ? enemyPoint : maxEnemyPoint;
-//    		System.out.println("GameHelper-141 方向:" + i +
-//    				" Point:" + point + "allPoint:" + enemyPoint +
-//    				" Player:" + enemyPlayer );
-    	}
+		return maxEnemyPoint;
+	}
 
-        // 挟んでいる石を裏がえす
-        flipOverVirtual(index, player, nextBoard);
-        // 一覧
-        // nextBoard.printAll("nextNextBoard");
+	/**
+	 * そのマスにコマを置けるかどうかを調べる
+	 * @param:
+	 *   int index -- 現在の地点。通し番号。0...36 (6x6の場合)
+	 *   Color color -- 現在のプレーヤー
+	 *   Board vBoard -- 仮想の盤面
+	 * @return:
+	 *   int point -- そのマスにコマを置いた場合、どれだけの敵コマを
+	 *            ひっくり返せるか。その数を返す。
+	 *            ゼロなら、そのマスにはコマを置けない。
+	 */
+	public int canMoveVirtual(int index, Color player, Board vBoard) {
+		int point = 0;
 
-    	return maxEnemyPoint;
-    }
+		MasuData[] neighborData = vBoard.neighbors(index);
 
-    /**
-     * そのマスにコマを置けるかどうかを調べる
-     * @param:
-     *   int index -- 現在の地点。通し番号。0...36 (6x6の場合)
-     *   Color color -- 現在のプレーヤー
-     *   Board vBoard -- 仮想の盤面
-     * @return:
-     *   int point -- そのマスにコマを置いた場合、どれだけの敵コマを
-     *            ひっくり返せるか。その数を返す。
-     *            ゼロなら、そのマスにはコマを置けない。
-     */
-    public int canMoveVirtual ( int index, Color player, Board vBoard ) {
-        int point = 0;
+		// System.out.println("serialNum:" + serialNum + " player:" + player);
+		for (int i = 0; i < 8; i++) {
+			// System.out.println("GameHelper-162 neighbor[i]:" + i + " color:" + neighborData[i].getColor() );
+			point = point + countEnemyVirtual(i, neighborData[i], player, 0, vBoard);
 
-        MasuData[] neighborData = vBoard.neighbors( index );
-        
-        // System.out.println("serialNum:" + serialNum + " player:" + player);
-        for (int i = 0; i < 8; i++) {
-            // System.out.println("GameHelper-162 neighbor[i]:" + i + " color:" + neighborData[i].getColor() );
-            point = point + countEnemyVirtual( i, neighborData[i], player, 0, vBoard);
+		}
 
-        }
+		return point;
+	}
 
-        return point;
-    }
+	/**
+	 * countEnemy -- その方向に敵コマがどれだけいるかを調べる。
+	 * @param direction -- 7 | 0 | 1
+	 *                     ---+---+---
+	 *                      6 | * | 2
+	 *                     ---+---+---
+	 *                      5 | 4 | 3
+	 *
+	 * @param neighbor  -- 調べたい地点のマスデータ(neighbors[i])
+	 * @param player    -- 現在のプレーヤー
+	 * @param point     -- 敵がいれば point が増える。初期値として 0 が渡される。
+	 * @param Board vBoard -- 仮想の盤面
+	 * @return
+	 */
+	public int countEnemyVirtual(int direction, MasuData neighbor, Color player, int point, Board vBoard) {
 
-    /**
-     * countEnemy -- その方向に敵コマがどれだけいるかを調べる。
-     * @param direction -- 7 | 0 | 1
-     *                     ---+---+---
-     *                      6 | * | 2
-     *                     ---+---+---
-     *                      5 | 4 | 3
-     *
-     * @param neighbor  -- 調べたい地点のマスデータ(neighbors[i])
-     * @param player    -- 現在のプレーヤー
-     * @param point     -- 敵がいれば point が増える。初期値として 0 が渡される。
-     * @param Board vBoard -- 仮想の盤面
-     * @return
-     */
-    public int countEnemyVirtual ( int direction, MasuData neighbor, Color player, int point, Board vBoard ) {
+		// 敵プレーヤー
+		Color enemy = (player.equals(Color.BLACK)) ? Color.WHITE : Color.BLACK;
 
-        // 敵プレーヤー
-        Color enemy = (player.equals( Color.BLACK )) ? Color.WHITE : Color.BLACK;
+		// System.out.println("GameHelper-201 enemy:" + enemy);
 
-        // System.out.println("GameHelper-201 enemy:" + enemy);
+		// もしその方向の隣が敵石だったら、ポイントを1プラスして、
+		// さらにその方向に調査をすすめる。
+		if (neighbor.getColor().equals(enemy)) {
+			point++;
+			// System.out.println("GameHelper-192 敵石見っけ! point:" + point);
+			// System.out.println("現在:" + masuData.getNum() + " 次の方向:" + direction );
+			// neighborのそのまたneighborの地点のマスを取得
+			MasuData nextNeighbor = vBoard.neighbor(direction, neighbor);
+			// System.out.println("次の地点:" + nextMasu.getNum() + " nextMasu:" + nextMasu.getColor());
+			// nextNeighbor を引数にして再帰処理
+			return countEnemyVirtual(direction, nextNeighbor, player, point, vBoard);
+		}
 
-        // もしその方向の隣が敵石だったら、ポイントを1プラスして、
-        // さらにその方向に調査をすすめる。
-        if ( neighbor.getColor().equals( enemy ) ) {
-            point++;
-            // System.out.println("GameHelper-192 敵石見っけ! point:" + point);
-            // System.out.println("現在:" + masuData.getNum() + " 次の方向:" + direction );
-            // neighborのそのまたneighborの地点のマスを取得
-            MasuData nextNeighbor = vBoard.neighbor( direction,  neighbor );
-            // System.out.println("次の地点:" + nextMasu.getNum() + " nextMasu:" + nextMasu.getColor());
-            // nextNeighbor を引数にして再帰処理
-            return countEnemyVirtual( direction, nextNeighbor, player, point, vBoard) ;
-        }
+		// もしその方向の隣が味方の石だったら、現在のポイントを返す。
+		// 敵石が無くてすぐに味方の石だったら、現在のポイントは 0 である。
+		if (neighbor.getColor().equals(player)) {
+			if (point > 0 && (neighbor.getYPos() == 1 || neighbor.getYPos() == board.getRow()))
+				point = point + 5;
+			if (point > 0 && (neighbor.getXPos() == 1 || neighbor.getXPos() == board.getCol()))
+				point = point + 5;
 
-        // もしその方向の隣が味方の石だったら、現在のポイントを返す。
-        // 敵石が無くてすぐに味方の石だったら、現在のポイントは 0 である。
-        if ( neighbor.getColor().equals( player )) {
-        	if (point > 0 && (neighbor.getYPos() == 1 || neighbor.getYPos() == board.getRow()))
-        		point = point + 5;
-        	if (point > 0 && (neighbor.getXPos() == 1 || neighbor.getXPos() == board.getCol()))
-        		point = point + 5;
+			//        	if (point > 0)
+			//        		System.out.println("GameHelper-199 point:" + point);
 
-//        	if (point > 0)
-//        		System.out.println("GameHelper-199 point:" + point);
-        	
-            return point;
-        }
+			return point;
+		}
 
-        // その方向に石が無い、つまり緑であれば、ゼロである。
-        // 仮に敵石が続いてのち緑であれば、ポイントはゼロになる。
-        // しかし、この return が処理されることはないだろう。
-        return 0;
-    }
+		// その方向に石が無い、つまり緑であれば、ゼロである。
+		// 仮に敵石が続いてのち緑であれば、ポイントはゼロになる。
+		// しかし、この return が処理されることはないだろう。
+		return 0;
+	}
 
 	/**
 	 * 挟んだ敵の石を裏返す。
@@ -225,11 +223,11 @@ public class GameHelper {
 		// GameHelper gameHelper = new GameHelper( board );
 
 		// 通し番号serialNum の地点の隣の地点を調べる
-		MasuData[] neighbors = board.neighbors( serialNum );
+		MasuData[] neighbors = board.neighbors(serialNum);
 
-//		 for (int i = 0; i < 8; i++) {
-//			 System.out.println("NukGui-385: neighbors[" + i + "]=" + neighbors[i].getNum() + "color=" + neighbors[i].getColor());
-//		 }
+		//		 for (int i = 0; i < 8; i++) {
+		//			 System.out.println("NukGui-385: neighbors[" + i + "]=" + neighbors[i].getNum() + "color=" + neighbors[i].getColor());
+		//		 }
 
 		// 八方向すべてについて検討する。
 		// i -- 方向を表す
@@ -249,7 +247,7 @@ public class GameHelper {
 				MasuData aNeighbor = neighbors[i]; // board.neighbor(i, neighbors[i]);
 				// System.out.println("そのマス:" + nextMasu.getNum() + " 色:" + nextMasu.getColor());
 				// その次のマスの色がプレーヤーの色と同じでない間は実行
-				while (! aNeighbor.getColor().equals(player)) {
+				while (!aNeighbor.getColor().equals(player)) {
 					int index = aNeighbor.getNum();
 					// System.out.println("NukGui-409:aNeighbor index:" + index + " player:" + aNeighbor.getColor());
 					// masuData にも新しいデータを送る。
@@ -277,11 +275,11 @@ public class GameHelper {
 		// GameHelper gameHelper = new GameHelper( board );
 
 		// 通し番号serialNum の地点の隣の地点を調べる
-		MasuData[] neighbors = board.neighbors( serialNum );
+		MasuData[] neighbors = board.neighbors(serialNum);
 
-//		 for (int i = 0; i < 8; i++) {
-//			 System.out.println("NukGui-385: neighbors[" + i + "]=" + neighbors[i].getNum() + "color=" + neighbors[i].getColor());
-//		 }
+		//		 for (int i = 0; i < 8; i++) {
+		//			 System.out.println("NukGui-385: neighbors[" + i + "]=" + neighbors[i].getNum() + "color=" + neighbors[i].getColor());
+		//		 }
 
 		// 八方向すべてについて検討する。
 		// i -- 方向を表す
@@ -301,7 +299,7 @@ public class GameHelper {
 				MasuData aNeighbor = neighbors[i]; // board.neighbor(i, neighbors[i]);
 				// System.out.println("そのマス:" + nextMasu.getNum() + " 色:" + nextMasu.getColor());
 				// その次のマスの色がプレーヤーの色と同じでない間は実行
-				while (! aNeighbor.getColor().equals(player)) {
+				while (!aNeighbor.getColor().equals(player)) {
 					int index = aNeighbor.getNum();
 					// System.out.println("NukGui-409:aNeighbor index:" + index + " player:" + aNeighbor.getColor());
 					// masuData にも新しいデータを送る。

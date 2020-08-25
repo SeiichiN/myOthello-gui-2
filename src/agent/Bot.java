@@ -50,7 +50,7 @@ public class Bot {
 
                 if (point > 0 && enemyPoint >= 0)
                 	System.out.println("Bot-52 Y:" + board.getY(i) + " X:" + board.getX(i) + " point:" + point + " enemyPoint:" + enemyPoint );
-                
+
                 if (point > 0) {
                     // もし i が盤面のへんならば、5ポイントをプラス。
                     // if (i % col == 0 || i % col == (col - 1)) {
@@ -58,7 +58,7 @@ public class Bot {
                     // }
                 	if (board.getX(i) == 1 || board.getX(i) == this.col) point = point + 5;
                 	if (board.getY(i) == 1 || board.getY(i) == this.row) point = point + 5;
-                	
+
                 	point = point - enemyPoint;
                 	if (point <= 0) point = 1;
                 }
@@ -76,10 +76,6 @@ public class Bot {
                     actionList.add( action );
                 }
             }
-            // else {
-            //	// System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-            //	continue;
-            // }
         }
         // System.out.println("Bot-85:-----------------------------------------");
 

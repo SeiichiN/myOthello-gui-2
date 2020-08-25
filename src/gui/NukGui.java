@@ -34,9 +34,10 @@ public class NukGui implements MouseListener, ActionListener {
 	private final int STONE_SIZE = 40;
 	private final int STONE_MARGIN = 3;
 
-	private int ctrlPanel_row_size = 70;
+	private int ctrlPanel_row_size = 90;
 	private int msg_row_size = 22;
 	private int btn_row_size = 22;
+	private int info_row_size = 22;
 
 	private ImageIcon blackIcon, whiteIcon, boardIcon;
 
@@ -44,7 +45,7 @@ public class NukGui implements MouseListener, ActionListener {
 	// 他のコードと情報を共有するためのもの。
 	// private ArrayList<MasuData> masuData;
 
-	private Board board; 
+	private Board board;
 
 	// 盤面に表示するマスの配列。
 	// 情報として通し番号とそのマスの色を持つ。
@@ -226,7 +227,7 @@ public class NukGui implements MouseListener, ActionListener {
 
 	/**
 	 * 次の手番のプレーヤーを指示する。 常に this.player を参照する。 次のプレーヤーを指示すると同時に this.player を更新する。
-	 * 
+	 *
 	 * @param: none
 	 * @return: Color nextPlayer
 	 */
@@ -247,7 +248,7 @@ public class NukGui implements MouseListener, ActionListener {
 
 	/**
 	 * 石を置く。 引数に row と col を受け取り、それを index に変換して、 setStone に処理を渡す。
-	 * 
+	 *
 	 * @param: int row -- 1...6 (盤面が6x6の場合) int col -- 1...6 ( " )
 	 */
 	public void move(int row, int col) {
@@ -255,18 +256,20 @@ public class NukGui implements MouseListener, ActionListener {
 		Color nextPlayer = nextPlayer();
 		int i = board.getIndex(row, col);
 		setStone(i, nextPlayer);
+		String info_text = "白: Y:" + Integer.toString( row ) + " X:" + Integer.toString( col );
+		msg_info.setText( info_text );
 	}
 
 	/**
 	 * setStone -- 指定したマスに石を置く
-	 * 
+	 *
 	 * @param: int i -- 0...board_masu_num Color player -- このメソッドを呼ぶ時点で this.player
 	 *             には 手番としてその color がセットされている。
 	 * @return: none ただし、this.serialNum の値を更新する。
 	 *
 	 *          row と col で指定した位置を (0, 0)の位置をゼロとして、 i の連続数で表す。
 	 *
-	 *             1  2  3  4  5  6 
+	 *             1  2  3  4  5  6
 	 *          +-----------------------
 	 *        1 |  0  1  2  3  4  5
 	 *        2 |  6  7  8  9 10 11
@@ -307,7 +310,7 @@ public class NukGui implements MouseListener, ActionListener {
 
 	/**
 	 * row と col を通し番号に変換する
-	 * 
+	 *
 	 * @param: int row -- 1...6 int col -- 1...6
 	 * @return: int i -- 0...35 (row=6, col=6 の場合)
 	 */
@@ -462,6 +465,7 @@ public class NukGui implements MouseListener, ActionListener {
 			}
 		}
 		if (greenCount > 0) {
+			msg_info.setText("白:パス");;
 			nextPlayer();
 		} else {
 			gameEnd();
@@ -510,10 +514,10 @@ public class NukGui implements MouseListener, ActionListener {
 
 		public Color getColor() { return this.color; }
 		public void setColor(Color color) { this.color = color;	}
-		
+
 		public int getXPos() { return this.xPos; }
 		public void setXPos( int x ) { this.xPos = x; }
-		
+
 		public int getYPos() { return this.yPos; }
 		public void setYPos( int y ) { this.yPos = y; }
 
