@@ -47,7 +47,7 @@ public class GameHelperTest {
 				int i = 14;
 				int enemyPoint = gameHelper.virtualSelectMove(i, board, Color.WHITE);
 
-				System.out.println("Y:" + board.getY(i) +
+				System.out.println("GameHelperTest-50 Y:" + board.getY(i) +
 						" X:" + board.getX(i) +
 						" enemyPoint:" + enemyPoint);
 			// }

@@ -9,6 +9,7 @@ public class Board implements Cloneable {
     private int row = 6;
     private int col = 6;
     private ArrayList<MasuData> arrayMasuData;
+    private int serialNum = 0;
 
     public Board () {
         arrayMasuData = new ArrayList <MasuData> ();
@@ -26,6 +27,8 @@ public class Board implements Cloneable {
     public int getCol () { return this.col; }
     public void setRow (int row) { this.row = row; }
     public void setCol (int col) { this.col = col; }
+    public int getSerialNum () { return this.serialNum; }
+    // public void setSerialNum () { this.serialNum = this.row * this.col; }
 
     /**
      * ボード作成時に初期値をもったデータで
@@ -40,10 +43,13 @@ public class Board implements Cloneable {
                 MasuData masu = new MasuData();
                 // System.out.println( "Board:41:count:" + count );
                 masu.setNum( count );
+                masu.setYPos( i );
+                masu.setXpos( t );
                 arrayMasuData.add( masu );
                 count++;
             }
         }
+        this.serialNum = count;
     }
 
     @Override
@@ -116,11 +122,6 @@ public class Board implements Cloneable {
     		// System.out.println("Y:" + getY(ele.getNum()) + " X:" + getX(ele.getNum()) + " " + ele.getColor());
     	}
 
-
-
-    	// this.arrayMasuData.forEach( ele -> {
-    	// 	System.out.println("Y:" + getY(ele.getNum()) + " X:" + getX(ele.getNum()) + " " + ele.getColor());
-    	// });
     	System.out.println("-----------------------< printAll END >---------------------------");
     }
 
