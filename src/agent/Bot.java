@@ -48,9 +48,6 @@ public class Bot {
 
                 enemyPoint = gameHelper.virtualSelectMove( i, board, Color.WHITE );
 
-                if (point > 0 && enemyPoint >= 0)
-                	System.out.println("Bot-52 Y:" + board.getY(i) + " X:" + board.getX(i) + " point:" + point + " enemyPoint:" + enemyPoint );
-
                 if (point > 0) {
                     // もし i が盤面のへんならば、5ポイントをプラス。
                     // if (i % col == 0 || i % col == (col - 1)) {
@@ -59,9 +56,14 @@ public class Bot {
                 	if (board.getX(i) == 1 || board.getX(i) == this.col) point = point + 5;
                 	if (board.getY(i) == 1 || board.getY(i) == this.row) point = point + 5;
 
-                	point = point - enemyPoint;
-                	if (point <= 0) point = 1;
+                	// point = point - enemyPoint;
+                	// if (point <= 0) point = 1;
                 }
+
+                // デバッグ用
+                // ポイントの表示
+                if (point > 0 && enemyPoint >= 0)
+                	System.out.println("Bot-52 Y:" + board.getY(i) + " X:" + board.getX(i) + " point:" + point + " enemyPoint:" + enemyPoint );
 
                 // もし i が盤面のかどならば、10ポイントをプラス。
                 // こうすると、よりつよくなるだろう。
@@ -73,6 +75,7 @@ public class Bot {
                     Action action = new Action();
                     action.setIndexXY( i, this.col );
                     action.setPoint( point );
+                    action.setEnemyPoint( enemyPoint );
                     actionList.add( action );
                 }
             }
@@ -107,17 +110,19 @@ public class Bot {
         // pointが最も高い action のリストを作成する。
         ArrayList <Action> bestActionList = new ArrayList <> ();
 
-        maxPoint = -1; // ele.getPoint() が -1 になることはない。
+        maxPoint = -100; // expectPoint が -100 になることはない。
         actionList.forEach( ele -> {
+        	// ele.getPoint() と ele.getEnemyPoint() とを考慮する。
+        	int expectPoint = ele.getPoint() - ele.getEnemyPoint();
         	// ele.getPoint() が maxPoint よりも大きい場合、maxPointを更新して、
         	// bestActionListをクリアしたのち、bestActionListを作り直す。
-			if (ele.getPoint() > maxPoint) {
-				maxPoint = ele.getPoint();
+			if (expectPoint > maxPoint) {
+				maxPoint = expectPoint;
 				bestActionList.clear();
 				bestActionList.add(ele);
 			}
 			// ele.getPoint() が maxPoint と同じ場合、bestActionList に追加する。
-			if (ele.getPoint() == maxPoint) {
+			else if (expectPoint == maxPoint) {
 				bestActionList.add(ele);
 			}
 		});
@@ -128,7 +133,7 @@ public class Bot {
         //                     " X:" + bestAction.getX() +
         //                     " P:" + bestAction.getPoint() );
         // System.exit(1);
-        System.out.println("bestActionPoint:" + bestAction.getPoint() );
+        System.out.println("Bot-136 bestAction Y:" + bestAction.getY() + " X:" + bestAction.getX() + " point:" + maxPoint);
         return bestAction;
     }
 }

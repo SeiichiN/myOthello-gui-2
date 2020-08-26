@@ -110,7 +110,18 @@ public class GameHelper {
 		// それぞれ、その地点に黒が石を置いたとして、黒は何ポイント得ることができるか？
 		for (int i = 0; i < 8; i++) {
 			MasuData[] neighbors = nextBoard.neighbors(index);
+			// System.out.println("GameHelper-114 i:" + neighbors[i].getNum() +
+			// 		" yPos:" + neighbors[i].getYPos() + " xPos:" + neighbors[i].getXPos() );
+
 			int enemyPoint = canMoveVirtual(neighbors[i].getNum(), enemyPlayer, nextBoard);
+			// System.out.println("GameHelper-114 i:" + neighbors[i].getNum() + " enemyPoint:" + enemyPoint );
+
+			if ( nextBoard.onHLine( neighbors[i].getYPos() ) ) enemyPoint += 5;
+			if ( nextBoard.onVLine( neighbors[i].getXPos() ) ) enemyPoint += 5;
+			//System.out.println("GameHelper-121 Y:" + neighbors[i].getYPos() +
+			//		" X:" + neighbors[i].getXPos() +
+			//		" enemyPoint:" + enemyPoint );
+
 			// enemyPoint と point を比べて、point の方が大きければ、それを enemyPoint とする。
 			maxEnemyPoint = (enemyPoint > maxEnemyPoint) ? enemyPoint : maxEnemyPoint;
 			//    		System.out.println("GameHelper-141 方向:" + i +
@@ -145,8 +156,10 @@ public class GameHelper {
 		// System.out.println("serialNum:" + serialNum + " player:" + player);
 		for (int i = 0; i < 8; i++) {
 			// System.out.println("GameHelper-162 neighbor[i]:" + i + " color:" + neighborData[i].getColor() );
-			point = point + countEnemyVirtual(i, neighborData[i], player, 0, vBoard);
+			int temppoint = countEnemyVirtual(i, neighborData[i], player, 0, vBoard);
+			// System.out.println("GameHelper-154 [" + i + "]" + neighborData[i].getYPos() );
 
+			point = point + temppoint;
 		}
 
 		return point;
@@ -171,7 +184,7 @@ public class GameHelper {
 		// 敵プレーヤー
 		Color enemy = (player.equals(Color.BLACK)) ? Color.WHITE : Color.BLACK;
 
-		// System.out.println("GameHelper-201 enemy:" + enemy);
+		// System.out.println("GameHelper-184 neighbor yPos:" + neighbor.getYPos() + " xPos:" + neighbor.getXPos() );
 
 		// もしその方向の隣が敵石だったら、ポイントを1プラスして、
 		// さらにその方向に調査をすすめる。
@@ -188,6 +201,7 @@ public class GameHelper {
 
 		// もしその方向の隣が味方の石だったら、現在のポイントを返す。
 		// 敵石が無くてすぐに味方の石だったら、現在のポイントは 0 である。
+		// また、盤面の辺に石があれば、5ポイントプラス。
 		if (neighbor.getColor().equals(player)) {
 			if (point > 0 && (neighbor.getYPos() == 1 || neighbor.getYPos() == board.getRow()))
 				point = point + 5;

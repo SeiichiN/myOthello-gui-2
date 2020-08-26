@@ -19,31 +19,39 @@ public class GameHelperTest {
 
 		// 最初に中央に4つのコマを置く。黒白黒白
 		init( board );
-		// 29(Y:4 X:6) の地点に黒を置いたとする。
-		board.get( 29 ).setColor( Color.BLACK );
-
 		// gameHelperインスタンスを作成
 		GameHelper gameHelper = new GameHelper( board );
+
+		// 29(Y:4 X:6) の地点に黒を置いたとする。
+		board.get( 29 ).setColor( Color.BLACK );
 		// 29に黒を置いたので、挟んだ白をひっくり返す
 		gameHelper.flipOverReal( 29, Color.BLACK);
+
+		board.get(21).setColor( Color.white );
+		gameHelper.flipOverReal( 21, Color.WHITE );
+		board.get(13).setColor( Color.BLACK );
+		gameHelper.flipOverReal( 13, Color.BLACK );
+		// board.get(14).setColor( Color.white );
+		// gameHelper.flipOverReal( 14, Color.WHITE );
+
 
 //		int point = gameHelper.enemySelectMove( 21, board, Color.WHITE );
 //		board.get(21).setColor( Color.WHITE );
 //		gameHelper.flipOverReal(21, Color.WHITE);
 //		System.out.println("point: " + point );
-//		board.printAll("board");
+		board.printAll("board");
 
 		// 21(Y:3 X:6) の地点に白を置いた場合、敵（黒）は何ポイント得るだろうか？
-		for (int i = 0; i < 64 ; i++) {
-			if (i == 19 || i == 21 || i == 37) {
-
+		// for (int i = 0; i < 64 ; i++) {
+			// if (i == 19 || i == 21 || i == 37) {
+				int i = 14;
 				int enemyPoint = gameHelper.virtualSelectMove(i, board, Color.WHITE);
 
 				System.out.println("Y:" + board.getY(i) +
 						" X:" + board.getX(i) +
 						" enemyPoint:" + enemyPoint);
-			}
-		}
+			// }
+		// }
 	}
 
 	public static void init (Board board) {
