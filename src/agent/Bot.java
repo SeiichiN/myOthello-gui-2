@@ -103,7 +103,7 @@ public class Bot {
             action.setX(0);
             action.setIndex(0);
             actionList.add( action );
-            System.out.println( action.toString() );
+            System.out.println( "Bot-106 " + action.toString() );
             return action;
         }
 
